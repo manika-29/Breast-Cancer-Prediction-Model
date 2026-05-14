@@ -141,19 +141,6 @@ Breast-Cancer-Prediction-Model/
 │── requirements.txt
 ```
 
----
-
-## 📈 Future Improvements
-
-* Increase model accuracy using deep architectures
-* Add confusion matrix & classification report
-* Deploy model using Streamlit or Flask
-* Use real-world datasets
-
----
-
-## ✨ Conclusion
-
 This project demonstrates how **Neural Networks** can be applied to medical datasets to assist in early detection of breast cancer, helping in better decision-making.
 
 ---
