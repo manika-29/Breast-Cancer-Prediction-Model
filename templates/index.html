@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Breast Cancer Prediction</title>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+
+    <div class="container">
+
+        <!-- Header -->
+        <header class="hero">
+            <div class="badge">MACHINE LEARNING PROJECT</div>
+
+            <h1>Breast Cancer Prediction</h1>
+
+            <p>
+                An AI-powered educational application that predicts
+                whether a sample is classified as benign or malignant
+                using 30 input measurements.
+            </p>
+        </header>
+
+
+        <!-- Medical Disclaimer -->
+        <div class="disclaimer">
+            <strong>Important Disclaimer:</strong>
+            This application is for educational purposes only.
+            It is not a medical diagnostic tool. Do not use its
+            predictions to make healthcare decisions.
+        </div>
+
+
+        <!-- Error Message -->
+        {% if error %}
+        <div class="error-message" role="alert">
+            <strong>Input Error:</strong> {{ error }}
+        </div>
+        {% endif %}
+
+
+        <!-- Prediction Result -->
+        {% if prediction %}
+
+        <section class="result-card
+            {% if prediction == 'Benign' %}
+                benign-result
+            {% else %}
+                malignant-result
+            {% endif %}">
+
+            <div class="result-label">Prediction Result</div>
+
+            <h2>{{ prediction }}</h2>
+
+            <p>
+                {% if prediction == 'Benign' %}
+                The model classified the entered sample as benign.
+                {% else %}
+                The model classified the entered sample as malignant.
+                {% endif %}
+            </p>
+
+            <div class="scores">
+
+                <div class="score-box">
+                    <span>Malignant model score</span>
+                    <strong>{{ scores.malignant }}%</strong>
+                </div>
+
+                <div class="score-box">
+                    <span>Benign model score</span>
+                    <strong>{{ scores.benign }}%</strong>
+                </div>
+
+            </div>
+
+            <small>
+                These are raw model scores, not calibrated medical
+                probabilities or diagnostic certainty.
+            </small>
+
+        </section>
+
+        {% endif %}
+
+
+        <!-- Input Form -->
+        <section class="form-section">
+
+            <div class="section-header">
+
+                <div>
+                    <h2>Enter Feature Measurements</h2>
+
+                    <p>
+                        Enter a numerical value for each of the
+                        30 features in the same order and units
+                        used by the training dataset.
+                    </p>
+                </div>
+
+                <span class="feature-count">30 Features</span>
+
+            </div>
+
+            <div class="sample-data-container">
+                <a href="{{ url_for('load_sample') }}" class="sample-button">
+                    Load Sample Data
+                </a>
+
+                <p>
+                    Click to fill all 30 fields with an example from the
+                    original dataset for demonstration purposes.
+                </p>
+            </div>
+            <form action="{{ url_for('predict') }}" method="POST">
+
+                <div class="input-grid">
+
+                    {% for feature in feature_names %}
+
+                    <div class="input-group">
+
+                        <label for="feature_{{ loop.index0 }}">
+                            {{ feature.replace('_', ' ').title() }}
+                        </label>
+
+                        <input type="number" step="any" id="feature_{{ loop.index0 }}" name="feature_{{ loop.index0 }}"
+                            placeholder="Enter value" value="{{ values.get('feature_' ~ loop.index0, '') }}" required>
+
+                    </div>
+
+                    {% endfor %}
+
+                </div>
+
+
+                <!-- Buttons -->
+                <div class="button-container">
+
+                    <button type="submit" class="predict-button">
+                        Predict Result
+                    </button>
+
+                    <button type="button" class="clear-button" onclick="clearForm()">
+                        Clear Form
+                    </button>
+
+                </div>
+
+            </form>
+
+        </section>
+
+
+        <!-- Footer -->
+        <footer>
+            <p>
+                Developed using Python, Flask, TensorFlow/Keras
+                and Scikit-learn.
+            </p>
+
+            <p>Educational Machine Learning Project</p>
+        </footer>
+
+    </div>
+
+    <script>
+    function clearForm() {
+        // Clear all 30 input fields
+        document.querySelectorAll(".input-grid input").forEach(input => {
+            input.value = "";
+        });
+
+        // Remove the previous prediction result
+        const resultCard = document.querySelector(".result-card");
+        if (resultCard) {
+            resultCard.remove();
+        }
+
+        // Remove any previous error message
+        const errorMessage = document.querySelector(".error-message");
+        if (errorMessage) {
+            errorMessage.remove();
+        }
+    }
+</script>
+</body>
+
+</html>
